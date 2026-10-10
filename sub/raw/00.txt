@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/raw/01.yaml
