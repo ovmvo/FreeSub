@@ -1,0 +1,962 @@
+port: 7890
+socks-port: 7891
+mixed-port: 10801
+redir-port: 7892
+tproxy-port: 7893
+allow-lan: true
+bind-address: "*"
+find-process-mode: strict
+mode: rule
+secret: ""
+unified-delay: false
+tcp-concurrent: true
+geodata-mode: false
+skip-auth-prefixes:
+    - 127.0.0.1/32
+authentication: []
+lan-allowed-ips:
+    - 0.0.0.0/0
+    - ::/0
+lan-disallowed-ips: []
+geox-url:
+    geoip: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
+    geosite: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+    mmdb: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.metadb"
+geo-auto-update: true
+geo-update-interval: 24
+log-level: silent
+ipv6: false
+external-controller: 0.0.0.0:9090 # 
+external-controller-tls: 0.0.0.0:9443
+external-controller-unix: mihomo.sock
+external-controller-pipe: \\.\pipe\mihomo
+external-ui: ui
+external-ui-url: "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+external-doh-server: /dns-query
+global-client-fingerprint: chrome
+profile:
+    store-selected: false
+    store-fake-ip: true
+sniffer:
+    enable: true
+    sniff:
+        HTTP:
+            ports: [80, 8080-8880]
+            override-destination: true
+        TLS:
+            ports: [443, 8443]
+        QUIC:
+            ports: [443, 8443]
+    skip-domain:
+        - "Mijia Cloud"
+        - "+.push.apple.com"
+tun:
+    enable: true
+    stack: system
+    auto-route: true
+    auto-redirect: true
+    auto-detect-interface: true
+    dns-hijack:
+        - any:53
+        - tcp://any:53
+    device: mihomo
+    mtu: 9000
+    strict-route: false
+    gso: true
+    gso-max-size: 65536
+    udp-timeout: 300
+    iproute2-table-index: 2022
+    iproute2-rule-index: 9000
+    endpoint-independent-nat: false
+    route-exclude-address:
+        - 172.16.0.0/12
+        - fc00::/7
+dns:
+    enable: true
+    listen: 0.0.0.0:53
+    ipv6: false
+    default-nameserver: [223.5.5.5, 119.29.29.29]
+    enhanced-mode: fake-ip
+    fake-ip-range: 198.18.0.1/16
+    use-hosts: true
+    nameserver: ['https://doh.pub/dns-query', 'https://dns.alidns.com/dns-query']
+    url-test: ['https://doh.dns.sb/dns-query', 'https://dns.cloudflare.com/dns-query', 'https://dns.twnic.tw/dns-query', 'tls://8.8.4.4:853']
+    url-test-filter: {geoip: true, ipcidr: [240.0.0.0/4, 0.0.0.0/32]}
+proxy-groups:
+    - name: Proxy
+      type: select
+      interval: 300
+      url: https://gstatic.com/generate_204
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - "\U0001F64F 自动选择"
+        - "\U0001F4AA 手动选择"
+        - "\U0001F3A1负载均衡"
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/mihomo-party-org/mihomo-party/resources/icon.png
+    - name: Cloudflare
+      type: select
+      interval: 300
+      url: https://gstatic.com/generate_204
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - Proxy
+        - DIRECT
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/cloudflare.png
+    - name: Bing
+      type: select
+      interval: 300
+      url: https://gstatic.com/generate_204
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - DIRECT
+        - Proxy
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/microsoft-bing.png
+    - name: Github
+      type: select
+      interval: 300
+      url: https://github.com
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - Proxy
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/github.png
+    - name: OpenAI
+      type: select
+      interval: 300
+      url: https://openai.com
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - "\U0001F64F 自动选择"
+        - "\U0001F4AA 手动选择"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1F9\U0001F1FC 台湾节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/chatgpt.png
+    - name: Netflix
+      type: select
+      interval: 300
+      url: https://netflix.com
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - "\U0001F64F 自动选择"
+        - "\U0001F4AA 手动选择"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1F9\U0001F1FC 台湾节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/netflix.png
+    - name: Disney+
+      type: select
+      interval: 300
+      url: https://disney.com
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - "\U0001F64F 自动选择"
+        - "\U0001F4AA 手动选择"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1F9\U0001F1FC 台湾节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/disney-plus.png
+    - name: YouTube
+      type: select
+      interval: 300
+      url: https://youtube.com
+      lazy: true
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - "\U0001F64F 自动选择"
+        - "\U0001F4AA 手动选择"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1F9\U0001F1FC 台湾节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/youtube.png
+    - name: TikTok
+      type: select
+      proxies:
+        - Proxy
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/tiktok.png
+    - name: Spotify
+      type: select
+      proxies:
+        - Proxy
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/spotify.png
+    - name: Telegram
+      type: select
+      url: https://telegram.org
+      interval: 300
+      timeout: 2000
+      max-failed-times: 3
+      proxies:
+        - Proxy
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/telegram.png
+    - name: Microsoft
+      type: select
+      proxies:
+        - Proxy
+        - DIRECT
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/microsoft.png
+    - name: Onedrive
+      type: select
+      proxies:
+        - DIRECT
+        - Proxy
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/microsoft-onedrive.png
+    - name: Apple
+      type: select
+      proxies:
+        - DIRECT
+        - Proxy
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/apple.png
+    - name: Gamer
+      type: select
+      include-all: true
+      filter: "^(?=.*((?i)游戏|\U0001F3AE|(\\b(GAME)\\b)))(?!.*((?i)回国|校园)).*$"
+      proxies:
+        - DIRECT
+        - Proxy
+      icon: https://cdn.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Game.png
+    - name: GlobalMedia
+      type: select
+      proxies:
+        - Proxy
+        - DIRECT
+        - "\U0001F1ED\U0001F1F0 香港节点"
+        - "\U0001F1EF\U0001F1F5 日本节点"
+        - "\U0001F1F0\U0001F1F7 韩国节点"
+        - "\U0001F1F8\U0001F1EC 新加坡节点"
+        - "\U0001F1FA\U0001F1F8 美国节点"
+        - "\U0001F1EC\U0001F1E7 英国节点"
+        - "\U0001F1EB\U0001F1F7 法国节点"
+        - "\U0001F1E9\U0001F1EA 德国节点"
+        - "\U0001F1E8\U0001F1E6 加拿大节点"
+        - "\U0001F1E6\U0001F1FA 澳大利亚节点"
+        - "\U0001F1F3\U0001F1F1 荷兰节点"
+        - "\U0001F1F7\U0001F1FA 俄罗斯节点"
+        - "\U0001F1ED\U0001F1FA 匈牙利节点"
+        - "\U0001F1FA\U0001F1E6 乌克兰节点"
+        - "\U0001F1F5\U0001F1F1 波兰节点"
+        - "\U0001F1EE\U0001F1F9 意大利节点"
+        - "\U0001F1EE\U0001F1F7 伊朗节点"
+      icon: https://cdn.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/ForeignMedia.png
+    - name: "\U0001F4AA 手动选择"
+      type: select
+      include-all: true
+    - name: "\U0001F64F 自动选择"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      include-all: true
+    - name: "\U0001F3A1负载均衡"
+      type: load-balance
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      disable-udp: false
+      timeout: 2000
+      max-failed-times: 3
+      strategy: sticky-sessions
+      include-all: true
+    - name: "\U0001F1ED\U0001F1F0 香港节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)HK|香港|港"
+      include-all: true
+    - name: "\U0001F1F9\U0001F1FC 台湾节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)TW|台湾|台"
+      include-all: true
+    - name: "\U0001F1EF\U0001F1F5 日本节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)JP"
+      include-all: true
+    - name: "\U0001F1F0\U0001F1F7 韩国节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)KR|韩国|韩"
+      include-all: true
+    - name: "\U0001F1F8\U0001F1EC 新加坡节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)SG|新加坡|狮城"
+      include-all: true
+    - name: "\U0001F1FA\U0001F1F8 美国节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)US|美国|美"
+      include-all: true
+    - name: "\U0001F1EC\U0001F1E7 英国节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)UK|GB|英国|英"
+      include-all: true
+    - name: "\U0001F1EB\U0001F1F7 法国节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)FR|法国|法"
+      include-all: true
+    - name: "\U0001F1E9\U0001F1EA 德国节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)DE|德国|德"
+      include-all: true
+    - name: "\U0001F1E8\U0001F1E6 加拿大节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)CA|加拿大"
+      include-all: true
+    - name: "\U0001F1E6\U0001F1FA 澳大利亚节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)AU|澳大利亚|澳洲"
+      include-all: true
+    - name: "\U0001F1F3\U0001F1F1 荷兰节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)NL|荷兰"
+      include-all: true
+    - name: "\U0001F1F7\U0001F1FA 俄罗斯节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)RU|俄罗斯|俄"
+      include-all: true
+    - name: "\U0001F1ED\U0001F1FA 匈牙利节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)HU|匈牙利"
+      include-all: true
+    - name: "\U0001F1FA\U0001F1E6 乌克兰节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)UA|乌克兰"
+      include-all: true
+    - name: "\U0001F1F5\U0001F1F1 波兰节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)PL|波兰"
+      include-all: true
+    - name: "\U0001F1EE\U0001F1F9 意大利节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)IT|意大利"
+      include-all: true
+    - name: "\U0001F1EE\U0001F1F7 伊朗节点"
+      type: url-test
+      tolerance: 100
+      interval: 60
+      lazy: true
+      url: https://gstatic.com/generate_204
+      timeout: 2000
+      max-failed-times: 3
+      filter: "(?i)IR|伊朗"
+      include-all: true
+
+rule-providers:
+    GlobalMedia:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/GlobalMedia/GlobalMedia_Classical.yaml
+        path: ./RuleSet/GlobalMedia.yaml
+    ChinaMedia:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/ChinaMedia/ChinaMedia.yaml
+        path: ./RuleSet/ChinaMedia.yaml
+    Netflix:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Netflix/Netflix_Classical_No_Resolve.yaml
+        path: ./RuleSet/Netflix.yaml
+    Disney+:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Disney/Disney_No_Resolve.yaml
+        path: ./RuleSet/Disney+.yaml
+    YouTube:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/YouTube/YouTube_No_Resolve.yaml
+        path: ./RuleSet/YouTube.yaml
+    Apple:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Apple/Apple_Classical_No_Resolve.yaml
+        path: ./RuleSet/Apple.yaml
+    Microsoft:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Microsoft/Microsoft_No_Resolve.yaml
+        path: ./RuleSet/Microsoft.yaml
+    Nintendo:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Nintendo/Nintendo.yaml
+        path: ./RuleSet/Nintendo.yaml
+    PlayStation:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/PlayStation/PlayStation.yaml
+        path: ./RuleSet/PlayStation.yaml
+    Epic:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Epic/Epic.yaml
+        path: ./RuleSet/Epic.yaml
+    Xbox:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Xbox/Xbox.yaml
+        path: ./RuleSet/Xbox.yaml
+    TikTok:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/TikTok/TikTok_No_Resolve.yaml
+        path: ./RuleSet/TikTok.yaml
+    Spotify:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Spotify/Spotify.yaml
+        path: ./RuleSet/Spotify.yaml
+    OpenAI:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OpenAI/OpenAI_No_Resolve.yaml
+        path: ./RuleSet/OpenAI.yaml
+    Proxy:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Proxy/Proxy_Classical_No_Resolve.yaml
+        path: ./RuleSet/Proxy.yaml
+    China:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/ChinaMax/ChinaMax_Classical.yaml
+        path: ./RuleSet/China.yaml
+    Tencent:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Tencent/Tencent.yaml
+        path: ./RuleSet/Tencent.yaml
+    LAN:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Lan/Lan.yaml
+        path: ./RuleSet/LAN.yaml
+    Cloudflare:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Cloudflare/Cloudflare.yaml
+        path: ./RuleSet/Cloudflare.yaml
+    Onedrive:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OneDrive/OneDrive.yaml
+        path: ./RuleSet/Onedrive.yaml
+    Bing:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Bing/Bing.yaml
+        path: ./RuleSet/Bing.yaml
+    Github:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/GitHub/GitHub.yaml
+        path: ./RuleSet/Github.yaml
+    Telegram:
+        type: http
+        behavior: classical
+        interval: 86400
+        format: yaml
+        proxy: DIRECT
+        url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Telegram/Telegram.yaml
+        path: ./RuleSet/Telegram.yaml
+rules:
+    - RULE-SET,ChinaMedia,DIRECT
+    - RULE-SET,China,DIRECT
+    - RULE-SET,LAN,DIRECT
+    - GEOIP,CN,DIRECT
+    - RULE-SET,ChinaMedia,DIRECT
+    - RULE-SET,China,DIRECT
+    - RULE-SET,LAN,DIRECT
+    - GEOIP,CN,DIRECT
+    - RULE-SET,OpenAI,OpenAI
+    - RULE-SET,Cloudflare,Cloudflare
+    - RULE-SET,Github,Github
+    - RULE-SET,Onedrive,Onedrive
+    - RULE-SET,Bing,Bing
+    - RULE-SET,Apple,Apple
+    - RULE-SET,Spotify,Spotify
+    - RULE-SET,TikTok,TikTok
+    - RULE-SET,Netflix,Netflix
+    - RULE-SET,Disney+,Disney+
+    - RULE-SET,YouTube,YouTube
+    - RULE-SET,Telegram,Telegram
+    - RULE-SET,Nintendo,Gamer
+    - RULE-SET,PlayStation,Gamer
+    - RULE-SET,Epic,Gamer
+    - RULE-SET,Xbox,Gamer
+    - RULE-SET,Microsoft,Microsoft
+    - RULE-SET,GlobalMedia,GlobalMedia
+    - RULE-SET,Proxy,Proxy
+    - MATCH,Proxy
+
+proxies:
+  - {"client-fingerprint":"chrome","encryption":"none","flow":"xtls-rprx-vision","name":"🇭🇰 001  | ⬇️ 372KB/s","network":"tcp","port":443,"reality-opts":{"public-key":"AE81BrwMc8-kwGEIA1LhzaL03er0Qwt2V-fFy76F5jQ","short-id":"ca4aedd4"},"server":"165.154.63.139","skip-cert-verify":true,"tls":true,"type":"vless","uuid":"91ad30e9-ab06-4b4c-9fb9-1c2aa97d8b3a","servername":"www.amazon.com"}
+  - {"type":"vless","name":"🇨🇦 002  | ⬇️ 928KB/s","server":"213.152.165.203","port":2093,"uuid":"0b418782-e023-447e-ba99-e66b84ff118d","udp":true,"tls":true,"flow":"xtls-rprx-vision","client-fingerprint":"chrome","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM","short-id":"8a9725533854a7e8"},"network":"tcp","servername":"www.apple.com"}
+  - {"type":"vless","name":"🇩🇪 003  | ⬇️ 69KB/s","server":"germany01.azotvpn.xyz","port":443,"uuid":"5a96c1fc-f167-44b9-9020-8f6867537d14","udp":true,"tls":true,"flow":"xtls-rprx-vision","client-fingerprint":"random","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"4goy1hsfLyeu1POy0fjyH7qIrc1CK4p3nAZQVMTdPFY","short-id":"af3292b33826ae94","_spider-x":"/"},"network":"raw","servername":"germany01.azotvpn.xyz"}
+  - {"type":"vless","name":"🇩🇪 004  | ⬇️ 7KB/s","server":"162.35.224.113","port":443,"uuid":"095ed44e-b2f9-4f61-ba77-2142583578d8","udp":true,"tls":true,"flow":"xtls-rprx-vision","client-fingerprint":"firefox","skip-cert-verify":false,"packet-encoding":"xudp","network":"tcp","encryption":"none","servername":"mk-de6.silalink.sbs"}
+  - {"alpn":[""],"alterId":"0","cipher":"auto","http-opts":{"headers":{"Host":["openai.com"]},"path":["/QQqun-737805443"]},"name":"🇭🇰 005  | ⬇️ 1KB/s","network":"http","port":52080,"server":"47.242.81.94","skip-cert-verify":false,"tls":false,"type":"vmess","udp":true,"uuid":"e47b9f77-60e4-4738-8d53-772b6002e146","xudp":true}
+  - {"type":"anytls","name":"🇭🇰 006  | ⬇️ 1MB/s","server":"654968169.df6h451rh.xin","port":443,"udp":true,"sni":"images.ctfassets.net","client-fingerprint":"chrome","alpn":["http/1.1"],"skip-cert-verify":true,"packet-encoding":"","password":"0324fbc29561","packetEncoding":"none","allowInsecure":"1","fp":"chrome","sub-tag":"R002-260618"}
+  - {"type":"anytls","name":"🇹🇼 007  | ⬇️ 63KB/s","server":"svip.skycon808.com","port":47531,"udp":true,"sni":"tw15.swiftrelay.cc","skip-cert-verify":true,"packet-encoding":"","password":"87c6ad7b-e450-44a8-8088-bc2234d43de1","packetEncoding":"none","allowInsecure":"1","sub-tag":"P002-260618"}
+  - {"type":"vless","name":"🇳🇱 008  | ⬇️ 34KB/s","server":"94.103.2.23","port":8451,"uuid":"a346c521-7a7f-452b-9356-a4893feb5982","udp":true,"tls":true,"client-fingerprint":"firefox","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0"},"network":"grpc","grpc-opts":{"grpc-service-name":"GunService"},"encryption":"none","servername":"github.com"}
+  - {"type":"vless","name":"🇭🇰 009  | ⬇️ 348KB/s","server":"47.238.210.5","port":13779,"uuid":"928e6cce-8ced-4243-9a48-a6642edd09b0","udp":true,"tls":true,"client-fingerprint":"chrome","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"llTyp52oRXnJmQ3I9UUrmlwbMA79B-wLCRHCu-8dLGg","short-id":"af1bdd293097b664"},"network":"tcp","encryption":"none","servername":"tesla.com"}
+  - {"name":"🇸🇬 010 ","type":"vmess","server":"8.219.97.17","port":443,"cipher":"auto","uuid":"a9f4de8b-68f1-44b6-b6a2-1db60940503a","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"wjofHsQtEuEywxEq.v.3dns.vip"}},"servername":"wjofHsQtEuEywxEq.v.3dns.vip"}
+  - {"name":"🇭🇰 011  | ⬇️ 1KB/s","type":"vmess","server":"6jdvarazgu3qqr6q.v.3dns.vip","port":443,"cipher":"auto","uuid":"f23bb427c1f94373876c2f43e9f790f3","alterId":0,"tls":true,"skip-cert-verify":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{}},"client-fingerprint":"","servername":"6jdvarazgu3qqr6q.v.3dns.vip"}
+  - {"type":"hysteria2","name":"🇹🇷 012  | ⬇️ 5MB/s","server":"153.56.210.134","port":34121,"password":"c8ed6cd1-6566-4f7a-819e-1c55b2b360c9","sni":"www.bing.com","obfs":"salamander","obfs-password":"9a33460c-b037-47aa-a606-d04211f4e0ec","skip-cert-verify":true,"tfo":false}
+  - {"name":"🇭🇰 013  | ⬇️ 6KB/s","type":"vmess","server":"ex1ogt73nzpqkac2.v.3dns.vip","port":443,"cipher":"auto","uuid":"f23bb427-c1f9-4373-876c-2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"EX1oGt73NzPQKAc2.v.3dns.vip"}},"servername":"EX1oGt73NzPQKAc2.v.3dns.vip"}
+  - {"name":"🇸🇬 014  | ⬇️ 1MB/s","server":"172.64.150.28","port":2082,"type":"vless","uuid":"e5cc16a6-ea42-46b2-82ae-ad2157e1641b","tls":false,"tfo":true,"skip-cert-verify":false,"network":"ws","ws-opts":{"path":"/fp","headers":{"Host":"hhlfy.twiladaphne.ndjp.net"}},"udp":true}
+  - {"type":"vless","name":"🇳🇱 015  | ⬇️ 5MB/s","server":"netherlands02.azotvpn.xyz","port":443,"uuid":"a500be68-4ff6-433b-9968-472be69fab14","udp":true,"tls":true,"flow":"xtls-rprx-vision","client-fingerprint":"chrome","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"ui9MLRYZIz7S6_1E4fZgoamwTypfQAMwJ1olxGcWomE","short-id":"fc70174007a393b4"},"network":"tcp","encryption":"none","servername":"netherlands02.azotvpn.xyz"}
+  - {"type":"ss","skip-cert-verify":false,"udp":false,"server":"202.50.253.99","port":19999,"cipher":"aes-256-gcm","password":"ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=","name":"🇮🇹 016  | ⬇️ 182KB/s"}
+  - {"name":"🇹🇼 017  | ⬇️ 32KB/s","password":"111","port":1080,"server":"106.107.236.110","type":"socks5","username":"111"}
+  - {"type":"ss","skip-cert-verify":false,"udp":false,"server":"202.50.253.81","port":19999,"cipher":"aes-256-gcm","password":"ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=","name":"🇮🇹 018  | ⬇️ 4MB/s"}
+  - {"type":"ss","skip-cert-verify":false,"udp":false,"server":"202.50.253.36","port":19999,"cipher":"aes-256-gcm","password":"ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=","name":"🇮🇹 019  | ⬇️ 1MB/s"}
+  - {"client-fingerprint":"chrome","flow":"xtls-rprx-vision","name":"🇭🇰 020  | ⬇️ 365KB/s","network":"tcp","port":9443,"reality-opts":{"public-key":"0hIFPaEn4RdFib8_eP8HYxMywR5izEwM3JA2W1Zo8U4","short-id":"b390142456517acc"},"server":"154.83.86.85","tls":true,"type":"vless","udp":true,"uuid":"82eb8419-59f4-4d3e-9106-d05d22af615c","servername":"www.amazon.com"}
+  - {"type":"ss","skip-cert-verify":false,"udp":false,"server":"202.50.253.18","port":19999,"cipher":"aes-256-gcm","password":"ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=","name":"🇮🇹 021  | ⬇️ 3MB/s"}
+  - {"type":"ss","skip-cert-verify":false,"udp":false,"server":"202.50.253.27","port":19999,"cipher":"aes-256-gcm","password":"ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=","name":"🇮🇹 022  | ⬇️ 5MB/s"}
+  - {"name":"🇮🇳 023  | ⬇️ 5MB/s","server":"in.tronsg.com","type":"trojan","country":"🇺🇸US","port":443,"udp":true,"password":"Trojan@82164024","sni":"in.tronsg.com","skip-cert-verify":true,"network":"tcp"}
+  - {"type":"vless","name":"🇩🇪 024  | ⬇️ 13KB/s","server":"31.77.161.183","port":443,"uuid":"5a96c1fc-f167-44b9-9020-8f6867537d14","udp":true,"tls":true,"flow":"xtls-rprx-vision","client-fingerprint":"random","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"4goy1hsfLyeu1POy0fjyH7qIrc1CK4p3nAZQVMTdPFY","short-id":"af3292b33826ae94","_spider-x":"/"},"network":"tcp","encryption":"none","servername":"germany01.azotvpn.xyz"}
+  - {"name":"🇺🇸 025  | ⬇️ 552KB/s","password":"0324fbc29561","port":443,"server":"98416548.df6h451rh.xin","skip-cert-verify":true,"sni":"images.ctfassets.net","type":"anytls","udp":true}
+  - {"client-fingerprint":"chrome","flow":"xtls-rprx-vision","name":"🇭🇰 026  | ⬇️ 281KB/s","network":"tcp","port":9443,"reality-opts":{"public-key":"0hIFPaEn4RdFib8_eP8HYxMywR5izEwM3JA2W1Zo8U4","short-id":"b390142456517acc"},"server":"45.207.157.8","tls":true,"type":"vless","udp":true,"uuid":"82eb8419-59f4-4d3e-9106-d05d22af615c","servername":"www.amazon.com"}
+  - {"type":"vless","name":"🇷🇺 027  | ⬇️ 18KB/s","server":"9f6635t.msk1.h1clayd.click","port":443,"uuid":"3acb386b-fdd7-4bc9-911f-159fdcd834ce","udp":true,"tls":true,"client-fingerprint":"firefox","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"aovrqfVIxA_POvJorIg05wBQJM9nZ859c0fsNL7v9RM","short-id":"0ea5f9d7955c3971"},"network":"tcp","encryption":"none","servername":"9f6635t.msk1.h1clayd.click"}
+  - {"type":"vless","name":"🇫🇮 028  | ⬇️ 3MB/s","server":"se-2.pythonsetupbib.online","port":61374,"uuid":"f8d52ece-fad4-478d-875d-df6eed3befa7","udp":true,"tls":true,"client-fingerprint":"chrome","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI"},"network":"xhttp","xhttp-opts":{"host":"se-2.pythonsetupbib.online","path":"/","mode":"packet-up","x-padding-bytes":"100-500","reuse-settings":{"max-connections":"3"}},"encryption":"none","servername":"se-2.pythonsetupbib.online"}
+  - {"type":"wireguard","name":"🇨🇳 029  | ⬇️ 1MB/s","server":"8.6.112.183","port":2408,"private-key":"GC9J3ifRy5aEc9oezkMk4uxMuB27AWmAySH3m1Qzr3E=","udp":true,"ip":"172.16.0.2/32","ipv6":"2606:4700:110:81cf:afd6:7564:e1f3:2827/128","reserved":[75,219,32],"public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","mtu":1280,"keepalive":"25","persistent-keepalive":"25"}
+  - {"type":"wireguard","name":"🇨🇳 030  | ⬇️ 4MB/s","server":"162.159.192.3","port":2408,"private-key":"GC9J3ifRy5aEc9oezkMk4uxMuB27AWmAySH3m1Qzr3E=","udp":true,"ip":"172.16.0.2/32","reserved":[75,219,32],"public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","mtu":1280,"keepalive":"5","wnoise":"quic","wnoisecount":"5","wnoisedelay":"5","wpayloadsize":"40-90","persistent-keepalive":"5"}
+  - {"type":"hysteria","name":"🇫🇷 031  | ⬇️ 2MB/s","server":"62.210.70.191","port":24667,"alpn":["h3"],"auth-str":"dongtaiwang.com","down":"55 Mbps","protocol":"udp","skip-cert-verify":true,"sub-tag":"P002-260618","up":"11 Mbps","udp":"true","sni":"bing.com"}
+  - {"name":"🇭🇰 032  | ⬇️ 4KB/s","type":"vmess","server":"47.243.194.125","port":443,"cipher":"auto","uuid":"f23bb427-c1f9-4373-876c-2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"nycqg19zkwacpm1b.v.3dns.vip"}},"servername":"nycqg19zkwacpm1b.v.3dns.vip"}
+  - {"type":"ss","skip-cert-verify":false,"udp":false,"server":"202.50.253.72","port":19999,"cipher":"aes-256-gcm","password":"ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=","name":"🇮🇹 033  | ⬇️ 4MB/s"}
+  - {"name":"🇭🇰 034  | ⬇️ 1KB/s","type":"vmess","server":"47.243.153.153","port":443,"cipher":"auto","uuid":"f23bb427c1f94373876c2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"I2PSm3Knof5qjjix.v.3dns.vip"}},"servername":"I2PSm3Knof5qjjix.v.3dns.vip"}
+  - {"type":"wireguard","name":"🇨🇳 035  | ⬇️ 2KB/s","server":"162.159.192.5","port":500,"private-key":"iIf3tSEgkvUpXAh6q1mtiXUfmcp1atnMniBnor5RB1U=","udp":true,"ip":"172.16.0.2/32","reserved":[210,188,141],"public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","mtu":1280,"keepalive":"5","wnoise":"quic","wnoisecount":"5","wnoisedelay":"5","wpayloadsize":"40-90","persistent-keepalive":"5"}
+  - {"client-fingerprint":"chrome","flow":"xtls-rprx-vision","name":"🇭🇰 036  | ⬇️ 1MB/s","network":"tcp","port":9443,"reality-opts":{"public-key":"0hIFPaEn4RdFib8_eP8HYxMywR5izEwM3JA2W1Zo8U4","short-id":"b390142456517acc"},"server":"141.11.149.174","tls":true,"type":"vless","udp":true,"uuid":"82eb8419-59f4-4d3e-9106-d05d22af615c","servername":"www.amazon.com"}
+  - {"name":"🇸🇬 037  | ⬇️ 2MB/s","server":"104.21.70.21","port":8080,"type":"vless","uuid":"e5cc16a6-ea42-46b2-82ae-ad2157e1641b","tls":false,"tfo":true,"skip-cert-verify":false,"network":"ws","ws-opts":{"path":"/fp","headers":{"Host":"hhlfy.twiladaphne.ndjp.net"}},"udp":true}
+  - {"name":"🇭🇰 038  | ⬇️ 10MB/s","type":"vmess","server":"8.218.195.61","port":443,"cipher":"auto","uuid":"f23bb427c1f94373876c2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"EX1oGt73NzPQKAc2.v.3dns.vip"}},"servername":"EX1oGt73NzPQKAc2.v.3dns.vip"}
+  - {"alpn":["http/1.1"],"client-fingerprint":"chrome","name":"🇭🇰 039  | ⬇️ 110KB/s","password":"0324fbc29561","port":443,"server":"56481.df6h451rh.xin","skip-cert-verify":true,"sni":"images.ctfassets.net","type":"anytls"}
+  - {"type":"ss","skip-cert-verify":false,"udp":false,"server":"202.50.253.63","port":19999,"cipher":"aes-256-gcm","password":"ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=","name":"🇮🇹 040  | ⬇️ 4MB/s"}
+  - {"type":"trojan","password":"e26a229d-e8f2-4ff9-8c7d-58a9d83ee437","server":"45.32.52.173","port":8886,"name":"🇯🇵 041  | ⬇️ 45KB/s","skip-cert-verify":true,"sni":"45.32.52.173","client-fingerprint":"chrome","network":"tcp"}
+  - {"name":"🇫🇷 042  | ⬇️ 29KB/s","type":"vmess","server":"v35.hdacd.com","port":30835,"cipher":"auto","uuid":"cbb3f877-d1fb-344c-87a9-d153bffd5484","alterId":2,"tls":false,"network":"tcp"}
+  - {"name":"🇱🇰 043  | ⬇️ 1MB/s","server":"centurylink.es","port":8443,"type":"vless","uuid":"c136a12c-4260-48a7-a1e6-fbda83a11045","tls":true,"alpn":["h2%2Chttp%2F1.1"],"tfo":true,"skip-cert-verify":false,"network":"ws","ws-opts":{"path":"/","headers":{"Host":"free.sahanwickramasinghe.me"}},"udp":true,"servername":"free.sahanwickramasinghe.me"}
+  - {"name":"🇭🇰 044  | ⬇️ 7KB/s","type":"vmess","server":"nycqg19zkwacpm1b.v.3dns.vip","port":443,"cipher":"auto","uuid":"f23bb427-c1f9-4373-876c-2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"nycqg19zkwacpm1b.v.3dns.vip"}},"servername":"nycqg19zkwacpm1b.v.3dns.vip"}
+  - {"type":"vless","name":"🇺🇸 045  | ⬇️ 20KB/s","server":"jp.sofast.live","port":52683,"uuid":"5aaa5259-f924-4682-a4a3-149d472a9dcc","udp":true,"client-fingerprint":"chrome","skip-cert-verify":false,"packet-encoding":"xudp","network":"tcp"}
+  - {"name":"🇭🇰 046  | ⬇️ 5KB/s","type":"vmess","server":"2b9hwy8ocx7q74nm.v.3dns.vip","port":443,"cipher":"auto","uuid":"f23bb427c1f94373876c2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"2b9hwY8oCx7Q74NM.v.3dns.vip"}},"servername":"2b9hwY8oCx7Q74NM.v.3dns.vip"}
+  - {"name":"🇭🇰 047  | ⬇️ 1KB/s","type":"vmess","server":"qtkdr8jxe3wefxjm.v.3dns.vip","port":443,"cipher":"auto","uuid":"f23bb427c1f94373876c2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{}},"servername":"qtkdr8jxe3wefxjm.v.3dns.vip"}
+  - {"type":"vless","name":"🇺🇸 048 ","server":"jp.sofast.live","port":52683,"uuid":"399b6b23-cc40-4831-a494-61948e2df133","udp":true,"skip-cert-verify":false,"packet-encoding":"xudp","network":"tcp","encryption":"none"}
+  - {"name":"🇳🇱 049  | ⬇️ 1MB/s","type":"socks5","server":"185.145.99.41","port":1080,"username":"test123","password":"test123"}
+  - {"client-fingerprint":"chrome","flow":"xtls-rprx-vision","name":"🇸🇬 050  | ⬇️ 392KB/s","network":"tcp","port":9443,"reality-opts":{"public-key":"0hIFPaEn4RdFib8_eP8HYxMywR5izEwM3JA2W1Zo8U4","short-id":"b390142456517acc"},"server":"176.97.64.118","tls":true,"type":"vless","udp":true,"uuid":"82eb8419-59f4-4d3e-9106-d05d22af615c","servername":"www.amazon.com"}
+  - {"alpn":["http/1.1"],"client-fingerprint":"chrome","name":"🇹🇼 051  | ⬇️ 4MB/s","password":"0324fbc29561","port":443,"server":"684616s4.df6h451rh.xin","skip-cert-verify":true,"sni":"px.ads.linkedin.com","type":"anytls"}
+  - {"alterId":2,"cipher":"auto","name":"🇳🇱 052  | ⬇️ 5MB/s","network":"tcp","port":30829,"server":"v29.hdacd.com","skip-cert-verify":false,"tls":false,"type":"vmess","udp":true,"uuid":"cbb3f877-d1fb-344c-87a9-d153bffd5484","xudp":true,"servername":"v29.hdacd.com"}
+  - {"type":"vless","name":"🇸🇬 053 ","server":"47.237.74.17","port":16263,"uuid":"c538c9dd-2e3f-488f-a8ca-ac5b7c0773f3","udp":true,"skip-cert-verify":false,"packet-encoding":"xudp","network":"tcp"}
+  - {"type":"wireguard","name":"🇨🇳 054  | ⬇️ 25KB/s","server":"162.159.192.4","port":4500,"private-key":"4IswYF/j6o1cEQAYvVM9kCG8sRXX8gJZMgEQ9hSiSUc=","udp":true,"ip":"172.16.0.2/32","reserved":[158,118,224],"public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","mtu":1280,"keepalive":"5","wnoise":"quic","wnoisecount":"5","wnoisedelay":"5","wpayloadsize":"40-90","persistent-keepalive":"5"}
+  - {"type":"vless","name":"🇰🇷 055  | ⬇️ 9MB/s","server":"t11.qifei.app","port":443,"uuid":"b98d4c6e-6770-4a31-8256-a4750cdea0e7","udp":true,"tls":true,"flow":"xtls-rprx-vision","client-fingerprint":"ios","skip-cert-verify":false,"packet-encoding":"xudp","reality-opts":{"public-key":"0i_xAxYgSNx5NMpK2lOaWGS-CvAiD_LneYPO0MF0owo","short-id":"1a"},"network":"tcp","encryption":"none","servername":"www.amazon.com"}
+  - {"type":"wireguard","name":"🇨🇳 056  | ⬇️ 2KB/s","server":"8.6.112.63","port":1070,"private-key":"wIXy7GfDNO3qVxBoTmhjrPkvJTwORH5QZWcgx2g4qWI=","udp":true,"ip":"172.16.0.2/32","ipv6":"2606:4700:110:81cf:afd6:7564:e1f3:2827/128","reserved":[155,212,1],"public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","mtu":1280,"keepalive":"25","persistent-keepalive":"25"}
+  - {"name":"🇭🇰 057  | ⬇️ 4KB/s","type":"vmess","server":"6jdvarazgu3qqr6q.v.3dns.vip","port":443,"cipher":"auto","uuid":"f23bb427-c1f9-4373-876c-2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{}},"servername":"6jdvarazgu3qqr6q.v.3dns.vip"}
+  - {"type":"wireguard","name":"🇨🇳 058 ","server":"188.114.97.235","port":2371,"private-key":"EHGSBx1fPk0GR1lV8jirQcOOAvBEScCwPdbWh6DVDHA=","udp":true,"ip":"172.16.0.2/32","ipv6":"2606:4700:110:81cf:afd6:7564:e1f3:2827/128","reserved":[129,202,80],"public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","mtu":1280,"keepalive":"25","persistent-keepalive":"25"}
+  - {"name":"🇭🇰 059  | ⬇️ 3KB/s","type":"vmess","server":"i2psm3knof5qjjix.v.3dns.vip","port":443,"cipher":"auto","uuid":"f23bb427-c1f9-4373-876c-2f43e9f790f3","alterId":0,"tls":true,"network":"ws","ws-opts":{"path":"/ws-vmess","headers":{"Host":"i2psm3knof5qjjix.v.3dns.vip"}},"servername":"i2psm3knof5qjjix.v.3dns.vip"}
+  - {"type":"wireguard","name":"🇨🇳 060  | ⬇️ 3MB/s","server":"8.6.112.64","port":878,"private-key":"MO7Y3wBMgTwe1NH+t5tbw6qMmkV+0k3UHN1G9F6vkG4=","udp":true,"ip":"172.16.0.2/32","ipv6":"2606:4700:110:81cf:afd6:7564:e1f3:2827/128","reserved":[89,91,234],"public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","mtu":1280,"keepalive":"25","persistent-keepalive":"25"}
